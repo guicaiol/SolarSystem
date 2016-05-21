@@ -34,7 +34,7 @@ CONFIG -= qt app_bundle
 CONFIG += console
 
 # Libs
-LIBS += -lglut -lGLU -lGL
+LIBS += -lglut -lGLU -lGL -lX11 -pthread
 
 # Temporary dirs
 OBJECTS_DIR = tmp/obj
@@ -46,10 +46,22 @@ RCC_DIR = tmp/rc
 INCLUDEPATH *= . src
 
 SOURCES += \
-    src/main.cc
+    src/main.cc \
+    src/SolarSystem/solarsystem.cc \
+    src/SolarSystem/object/object.cc \
+    src/SolarSystem/object/planet/planet.cc \
+    src/SolarSystem/utils/color.cc \
+    src/SolarSystem/utils/position.cc \
+    src/3rdparty/imageloader.cc
 
 # Header files
-HEADERS +=
+HEADERS += \
+    src/SolarSystem/solarsystem.hh \
+    src/SolarSystem/object/object.hh \
+    src/SolarSystem/object/planet/planet.hh \
+    src/SolarSystem/utils/color.hh \
+    src/SolarSystem/utils/position.hh \
+    src/3rdparty/imageloader.hh
 
 # Other files
 DISTFILES +=
