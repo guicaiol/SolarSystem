@@ -34,7 +34,7 @@ CONFIG -= qt app_bundle
 CONFIG += console
 
 # Libs
-LIBS += -lglut -lGLU -lGL -lX11 -pthread
+LIBS += -lglut -lGLU -lGL
 
 # Temporary dirs
 OBJECTS_DIR = tmp/obj
