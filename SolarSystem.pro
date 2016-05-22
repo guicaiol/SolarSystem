@@ -3,8 +3,8 @@
 # Universidade de São Paulo (USP) - São Carlos
 # Instituto de Ciências Matemáticas e de Computação (ICMC)
 # Autores: Guilherme Caixeta de Oliveira - nUSP 8504368
-#          Andressa ?     - nUSP XX
-#          Lucas dos Santos Luchiari     - nUSP XX
+#          Andressa Baptistine Andrião   - nUSP 7547020
+#          Lucas dos Santos Luchiari     - nUSP 8084260
 #
 # This file is part of SolarSystem project.
 #
