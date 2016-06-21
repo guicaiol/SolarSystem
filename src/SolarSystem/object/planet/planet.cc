@@ -24,6 +24,7 @@
 
 #include "planet.hh"
 #include <math.h>
+#include <GL/glut.h>
 
 #define SCALE_RADIUS 1.0
 #define SCALE_ORBITRADIUS 2
@@ -31,11 +32,12 @@
 
 #define TWOPI 6.14
 
-Planet::Planet(const std::string &name, float radius, float orbitRadius, float translationPeriod, float rotationPeriod) : Object(name) {
+Planet::Planet(const std::string &name, float radius, float orbitRadius, float translationPeriod, float rotationPeriod, const char* imgname) : Object(name, imgname) {
     _radius = SCALE_RADIUS*radius;
     _orbitRadius = SCALE_ORBITRADIUS*orbitRadius;
     _translationPeriod = SCALE_TRANSLATION*translationPeriod;
     _rotationPeriod = rotationPeriod;
+
 }
 
 void Planet::iterate() {

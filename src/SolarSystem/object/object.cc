@@ -23,10 +23,11 @@
  */
 
 #include "object.hh"
+#include <GL/glut.h>
 
-Object::Object(const std::string &name) : _name(name) {
+Object::Object(const std::string &name, const char* imgname) : _name(name) {
     _quad = gluNewQuadric();
-    _img = loadBMP("../textures/earth.bmp");
+    _img = loadBMP(imgname);
 
     int img_width = _img->width;
     int img_height = _img->height;
@@ -45,16 +46,16 @@ void Object::drawSphere(const Position &pos, int radius, Color color) {
     glTranslated(pos.x(), pos.y(), pos.z());
 
     // Draw solid sphere
-    glColor4f(color.r(), color.g(), color.b(), color.a());
-    glutSolidSphere(radius, MESH_SIZE, MESH_SIZE);
+    //glColor4f(color.r(), color.g(), color.b(), color.a());
+    //glutSolidSphere(radius, MESH_SIZE, MESH_SIZE);
 
     // Texture sphere
-//    glBindTexture(GL_TEXTURE_2D, _texture);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//    gluQuadricNormals(_quad, GLU_SMOOTH);
-//    gluQuadricTexture(_quad, GL_TRUE);
-//    gluSphere(_quad, radius, MESH_SIZE, MESH_SIZE);
+    glBindTexture(GL_TEXTURE_2D, _texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    gluQuadricNormals(_quad, GLU_SMOOTH);
+    gluQuadricTexture(_quad, GL_TRUE);
+    gluSphere(_quad, radius, MESH_SIZE, MESH_SIZE);
 
     glPopMatrix();
 }

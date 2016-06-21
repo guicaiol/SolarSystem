@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <SolarSystem/solarsystem.hh>
+#include <GL/glut.h>
 
 int main(int argc, char *argv[]) {
 

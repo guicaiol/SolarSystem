@@ -36,7 +36,7 @@
 
 class Object {
 public:
-    Object(const std::string &name);
+    Object(const std::string &name, const char* imgname);
 
     // Getters
     std::string name() const { return _name; }

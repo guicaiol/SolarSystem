@@ -99,16 +99,16 @@ void SolarSystem::initialize() {
     _obs_posZ = 10000;
 
     // Create planets
-//    _planets.push_back(new Planet("Sun",     320, 0, 0,   0));
-    _planets.push_back(new Planet("Mercury", 35.634, 250, 0.24,    0));
-    _planets.push_back(new Planet("Venus",   46.000, 400,  0.62,   0));
-    _planets.push_back(new Planet("Earth",   58.268, 650,  1.00,   0));
-    _planets.push_back(new Planet("Mars",    30.361, 950,  1.68,   0));
-    _planets.push_back(new Planet("Jupiter", 174.4,  1300,  9.86,  0));
-    _planets.push_back(new Planet("Saturn",  131.8,  1727, 24.46,  0));
-    _planets.push_back(new Planet("Uranus",  87.4,   2070, 74.01,  0));
-    _planets.push_back(new Planet("Neptune", 83.3,   2697, 124.80, 0));
-    _planets.push_back(new Planet("Pluto",   22.104, 3213, 228.53, 0));
+ //   _planets.push_back(new Planet("Sun",     320, 0, 0,   0));
+    _planets.push_back(new Planet("Mercury", 35.634, 250, 0.24,    0, "../textures/mercury.bmp"));
+    _planets.push_back(new Planet("Venus",   46.000, 400,  0.62,   0, "../textures/venus.bmp"));
+    _planets.push_back(new Planet("Earth",   58.268, 650,  1.00,   0, "../textures/earth.bmp"));
+    _planets.push_back(new Planet("Mars",    30.361, 950,  1.68,   0, "../textures/mars.bmp"));
+    _planets.push_back(new Planet("Jupiter", 174.4,  1300,  9.86,  0, "../textures/jupiter.bmp"));
+    _planets.push_back(new Planet("Saturn",  131.8,  1727, 24.46,  0, "../textures/saturn.bmp"));
+    _planets.push_back(new Planet("Uranus",  87.4,   2070, 74.01,  0, "../textures/uranus.bmp"));
+    _planets.push_back(new Planet("Neptune", 83.3,   2697, 124.80, 0, "../textures/neptune.bmp"));
+    _planets.push_back(new Planet("Pluto",   22.104, 3213, 228.53, 0, "../textures/pluto.bmp"));
 }
 
 void SolarSystem::drawEvent() {

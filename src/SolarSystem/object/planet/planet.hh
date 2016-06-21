@@ -29,7 +29,7 @@
 
 class Planet : public Object {
 public:
-    Planet(const std::string &name, float radius, float orbitRadius, float translationPeriod, float rotationPeriod);
+    Planet(const std::string &name, float radius, float orbitRadius, float translationPeriod, float rotationPeriod, const char* imgname);
 
     // Virtual methods
     void iterate();
