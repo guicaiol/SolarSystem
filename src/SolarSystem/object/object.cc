@@ -36,26 +36,53 @@ Object::Object(const std::string &name, const char* imgname) : _name(name) {
     glGenTextures(1, &_texture);
     glBindTexture(GL_TEXTURE_2D, _texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    delete _img;
+
+    _pos.set(0.0, 0.0, 0.0);
+    _rotation = 0;
+    _lastRotation = 0;
 }
 
-void Object::drawSphere(const Position &pos, int radius, Color color) {
-
+void Object::drawSphere(const Position &pos, float rotation, int radius) {
     glPushMatrix();
 
     // Translate to position
-    glTranslated(pos.x(), pos.y(), pos.z());
+    glTranslatef(pos.x(), pos.y(), pos.z());
 
-    // Draw solid sphere
-    //glColor4f(color.r(), color.g(), color.b(), color.a());
-    //glutSolidSphere(radius, MESH_SIZE, MESH_SIZE);
+    // Rotation
+    if(_name!="Space")
+        glRotatef(rotation*180/3.14, 0.0f, 0.0f, 1.0f);
 
     // Texture sphere
+    if(_name=="Sun")
+        glEnable(GL_LIGHT1);
+    glEnable(GL_TEXTURE_2D);
+
     glBindTexture(GL_TEXTURE_2D, _texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     gluQuadricNormals(_quad, GLU_SMOOTH);
     gluQuadricTexture(_quad, GL_TRUE);
+
+    // Material
+    GLfloat mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+
+    GLfloat mat_shininess = 30.0f;
+    if(_name=="Sun")
+        mat_shininess = 5.0f;
+    glMaterialf(GL_FRONT, GL_SHININESS, mat_shininess);
+
+    GLfloat mat_emission[] = {0.05f, 0.0f, 0.0f, 1.0f};
+    glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
+
+    // Draw sphere
     gluSphere(_quad, radius, MESH_SIZE, MESH_SIZE);
+
+    glDisable(GL_TEXTURE_2D);
+    if(_name=="Sun")
+        glDisable(GL_LIGHT1);
 
     glPopMatrix();
 }

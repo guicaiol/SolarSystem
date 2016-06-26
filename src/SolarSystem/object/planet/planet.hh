@@ -25,11 +25,14 @@
 #ifndef PLANET_HH
 #define PLANET_HH
 
+#define SCALE_RADIUS 0.1
+#define SCALE_ORBITRADIUS 0.125
+
 #include <SolarSystem/object/object.hh>
 
 class Planet : public Object {
 public:
-    Planet(const std::string &name, float radius, float orbitRadius, float translationPeriod, float rotationPeriod, const char* imgname);
+    Planet(const std::string &name, float radius, float orbitRadius, double translationPeriod, double rotationPeriod, const char* imgname);
 
     // Virtual methods
     void iterate();
@@ -39,8 +42,8 @@ private:
     // Planet definition
     float _radius;
     float _orbitRadius;
-    float _translationPeriod;
-    float _rotationPeriod;
+    double _translationPeriod;
+    double _rotationPeriod;
 };
 
 #endif // PLANET_HH

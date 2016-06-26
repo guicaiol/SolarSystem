@@ -26,9 +26,8 @@
 #include <iostream>
 #include <math.h>
 
-#define SENS_ROT	5.0
-#define SENS_OBS	10.0
-#define SENS_TRANSL	10.0
+#define SENS_ROT	10.0
+#define ZOOM_PER_SCROLL 3
 
 SolarSystem* SolarSystem::_instance = NULL;
 
@@ -39,7 +38,7 @@ SolarSystem::SolarSystem() {
 void SolarSystem::start(int argc, char *argv[]) {
     // Initialize GLUT
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA);
 
     // Create window
     int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
@@ -59,8 +58,6 @@ void SolarSystem::start(int argc, char *argv[]) {
     glutReshapeFunc(SolarSystem::reshapeCallback);
     glutMouseFunc(SolarSystem::mouseCallback);
     glutMotionFunc(SolarSystem::motionCallback);
-//    glutKeyboardFunc(keyboardHandler);
-//    glutSpecialFunc(specialKeysHandler);
 
     // Initialize
     initialize();
@@ -77,38 +74,35 @@ void SolarSystem::initialize() {
     glEnable(GL_DEPTH_TEST);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_LIGHTING);
-    glEnable(GL_TEXTURE_2D);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_NORMALIZE);
 
-    // Lighting
-    GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-
-    GLfloat mat_shininess[] = {50.0};
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-
     // Initialize observator rotation
-    _obs_rotX = -40;
+    _obs_rotX = -50;
     _obs_rotY = 0;
     _obs_rotZ = 0;
 
     // Initialize observator position
     _obs_posX = 0;
     _obs_posY = 0;
-    _obs_posZ = 10000;
+    _obs_posZ = SCALE_RADIUS*3400;
+
+    // Create sun
+    _objects.push_back(new Planet("Sun", 160, 0, 0, 24.47, "../textures/sun.bmp"));
 
     // Create planets
- //   _planets.push_back(new Planet("Sun",     320, 0, 0,   0));
-    _planets.push_back(new Planet("Mercury", 35.634, 250, 0.24,    0, "../textures/mercury.bmp"));
-    _planets.push_back(new Planet("Venus",   46.000, 400,  0.62,   0, "../textures/venus.bmp"));
-    _planets.push_back(new Planet("Earth",   58.268, 650,  1.00,   0, "../textures/earth.bmp"));
-    _planets.push_back(new Planet("Mars",    30.361, 950,  1.68,   0, "../textures/mars.bmp"));
-    _planets.push_back(new Planet("Jupiter", 174.4,  1300,  9.86,  0, "../textures/jupiter.bmp"));
-    _planets.push_back(new Planet("Saturn",  131.8,  1727, 24.46,  0, "../textures/saturn.bmp"));
-    _planets.push_back(new Planet("Uranus",  87.4,   2070, 74.01,  0, "../textures/uranus.bmp"));
-    _planets.push_back(new Planet("Neptune", 83.3,   2697, 124.80, 0, "../textures/neptune.bmp"));
-    _planets.push_back(new Planet("Pluto",   22.104, 3213, 228.53, 0, "../textures/pluto.bmp"));
+    _objects.push_back(new Planet("Mercury", 35.634, 250,     88,   58.6, "../textures/mercury.bmp"));
+    _objects.push_back(new Planet("Venus",   46.000, 400,    224,    243, "../textures/venus.bmp"));
+    _objects.push_back(new Planet("Earth",   56.268, 650,    365, 0.9958, "../textures/earth.bmp"));
+    _objects.push_back(new Planet("Mars",    30.361, 950,    687, 1.0208, "../textures/mars.bmp"));
+    _objects.push_back(new Planet("Jupiter", 162.4,  1300,  4307,  0.396, "../textures/jupiter.bmp"));
+    _objects.push_back(new Planet("Saturn",  131.8,  1727, 10731,  0.416, "../textures/saturn.bmp"));
+    _objects.push_back(new Planet("Uranus",  87.4,   2070, 30660,   0.66, "../textures/uranus.bmp"));
+    _objects.push_back(new Planet("Neptune", 82.3,   2697, 60152,   0.75, "../textures/neptune.bmp"));
+    _objects.push_back(new Planet("Pluto",   22.104, 3213, 90491,  0.639, "../textures/pluto.bmp"));
+
+    // Create space dome
+    _objects.push_back(new Planet("Space", 5000, 0.0, 0.0, 0.0, "../textures/spacedome.bmp"));
 }
 
 void SolarSystem::drawEvent() {
@@ -116,17 +110,42 @@ void SolarSystem::drawEvent() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Planets
-    for(unsigned i=0; i<_planets.size(); i++) {
-        Planet *planet = _planets.at(i);
+    for(unsigned i=0; i<_objects.size(); i++) {
+        Planet *planet = _objects.at(i);
         planet->iterate();
         planet->draw();
     }
 
-    // Sun (Light 0)
+    // Sun point light (Light 0)
     GLfloat pos0[] = {0.0, 0.0, 0.0, 1.0};
     glLightfv(GL_LIGHT0, GL_POSITION, pos0);
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.0002);
     glEnable(GL_LIGHT0);
+
+    // Sun sphere light (Light 1)
+    GLfloat sun_ambient = 0.6f;
+    GLfloat l1_ambient[] = {sun_ambient, sun_ambient, sun_ambient, 1.0f};
+    glLightfv(GL_LIGHT1, GL_AMBIENT, l1_ambient);
+
+    GLfloat sun_specular = 1.0f;
+    GLfloat l1_specular[] = {sun_specular, sun_specular, sun_specular, 1.0f};
+    glLightfv(GL_LIGHT1, GL_SPECULAR, l1_specular);
+
+    GLfloat sun_diffuse = 0.0f;
+    GLfloat l1_diffuse[] = {sun_diffuse, sun_diffuse, sun_diffuse, 1.0f};
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, l1_diffuse);
+
+    // Light model properties
+    GLfloat ambient = 0.175f;
+    GLfloat model_ambient[] = {ambient, ambient, ambient, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, model_ambient);
+
+    // Fog
+    GLfloat fogColor[4]= {0.4f, 0.4f, 0.4f, 1.0f};
+    glFogi(GL_FOG_MODE, GL_EXP);
+    glFogfv(GL_FOG_COLOR, fogColor);
+    glFogf(GL_FOG_DENSITY, 0.0005f);
+    glEnable(GL_FOG);
 
     // Executa os comandos OpenGL
     glutSwapBuffers();
@@ -143,6 +162,33 @@ void SolarSystem::reshapeEvent(GLsizei width, GLsizei height) {
 }
 
 void SolarSystem::mouseEvent(int button, int state, int x, int y) {
+
+    if(button==3) {
+        _obs_posZ -= ZOOM_PER_SCROLL;
+        if(_obs_posZ <= SCALE_RADIUS*1000)
+            _obs_posZ = SCALE_RADIUS*1000;
+
+        // Repositionate observator
+        positionateObservator();
+
+        // Flush
+        glutPostRedisplay();
+
+        return;
+    } else if(button==4) {
+        _obs_posZ += ZOOM_PER_SCROLL;
+        if(_obs_posZ >= SCALE_RADIUS*4900)
+            _obs_posZ = SCALE_RADIUS*4900;
+
+        // Repositionate observator
+        positionateObservator();
+
+        // Flush
+        glutPostRedisplay();
+
+        return;
+    }
+
     if(state==GLUT_DOWN) {
         // Save current parameters
         _x_ini = x;
@@ -169,17 +215,15 @@ void SolarSystem::motionEvent(int x, int y) {
     switch(_button) {
         case GLUT_LEFT_BUTTON: {
             _obs_rotZ = _rotZ_ini - deltax/SENS_ROT;
-        } break;
+            _obs_rotX = _rotX_ini + deltay/SENS_ROT;
 
-        case GLUT_RIGHT_BUTTON: {
-            _obs_posZ = _obsZ_ini + deltay/SENS_OBS;
-        } break;
+            // Limit rotation
+            if(_obs_rotX < -80)
+                _obs_rotX = -80;
+            if(_obs_rotX > 0)
+                _obs_rotX = 0;
 
-        case GLUT_MIDDLE_BUTTON: {
-//            _obs_posX = _obsX_ini + deltax/SENS_TRANSL;
-//            _obs_posY = _obsY_ini - deltay/SENS_TRANSL;
         } break;
-
     }
 
     // Repositionate observator
@@ -207,7 +251,7 @@ void SolarSystem::checkVisualizationParams() {
     glLoadIdentity();
 
     // Projection
-    gluPerspective(40, _aspect, 0.1, 100000);
+    gluPerspective(40, _aspect, 0.1, 20000);
 
     // Repositionate observator
     positionateObservator();

@@ -64,4 +64,16 @@ HEADERS += \
     src/3rdparty/imageloader.hh
 
 # Other files
-DISTFILES +=
+DISTFILES += \
+    textures/earth.bmp \
+    textures/jupiter.bmp \
+    textures/mars.bmp \
+    textures/mercury.bmp \
+    textures/neptune.bmp \
+    textures/pluto.bmp \
+    textures/saturn.bmp \
+    textures/uranus.bmp \
+    textures/venus.bmp \
+    LICENSE \
+    Makefile \
+    README.md

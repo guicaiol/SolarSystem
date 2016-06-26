@@ -41,6 +41,7 @@ public:
     // Getters
     std::string name() const { return _name; }
     Position pos() const { return _pos; }
+    float rotation() const { return _rotation; }
 
     // Virtual pure methods
     virtual void iterate() = 0;
@@ -48,10 +49,12 @@ public:
 
 protected:
     // Drawing functions
-    void drawSphere(const Position &pos, int radius, Color color);
+    void drawSphere(const Position &pos, float rotation, int radius);
 
-    // Object position
+    // Object position and rotation
     Position _pos;
+    double _rotation;
+    double _lastRotation;
 private:
     // Object name
     const std::string _name;

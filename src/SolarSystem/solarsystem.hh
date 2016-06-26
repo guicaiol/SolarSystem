@@ -56,7 +56,7 @@ private:
     void motionEvent(int x, int y);
 
     // Planets
-    std::vector<Planet*> _planets;
+    std::vector<Planet*> _objects;
 
     GLfloat _aspect;
     GLfloat _obs_rotX, _obs_rotY, _obs_rotZ, _rotX_ini, _rotY_ini, _rotZ_ini;
