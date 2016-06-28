@@ -18,7 +18,7 @@ OBJECTS = \
 all: dirs $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(LFLAGS) $(OBJECTS) -o $(TARGET)
+	$(CC) $(OBJECTS) -o $(TARGET) $(LFLAGS)
 	
 $(OBJ)/planet.o:
 	$(CC) $(CFLAGS) -c $(SRC)/SolarSystem/object/planet/planet.cc -o $@
