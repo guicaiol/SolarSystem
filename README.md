@@ -10,3 +10,5 @@ Para compilar, utilize o Makefile (make).
 Para executar, entre na pasta 'bin' e execute com './SolarSystem'.
 
 É necessário possuir as bibliotecas do OpenGL instaladas.
+
+Vídeo de demonstração: https://www.youtube.com/watch?v=9zbnn52Kl-4
