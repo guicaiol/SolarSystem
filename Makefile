@@ -43,9 +43,6 @@ $(OBJ)/main.o:
 
 clean:
 	rm -f $(OBJ)/* $(TARGET)
-		
-run:
-	./$(TARGET)
 	
 valgrind:
 	valgrind ./$(TARGET)
