@@ -35,15 +35,23 @@ public:
     Planet(const std::string &name, float radius, float orbitRadius, double translationPeriod, double rotationPeriod, const char* imgname);
 
     // Virtual methods
-    void iterate();
+    void iterate(const Position &center);
     void draw();
 
+    // Moon config
+    void setMoon(float radius, float orbitRadius, double translationPeriod, double rotationPeriod, const char* imgname);
 private:
     // Planet definition
     float _radius;
     float _orbitRadius;
     double _translationPeriod;
     double _rotationPeriod;
+
+    Position _lastCenter;
+
+    // Moon
+    bool _hasMoon;
+    Planet *_moon;
 };
 
 #endif // PLANET_HH

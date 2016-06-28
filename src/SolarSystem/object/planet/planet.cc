@@ -38,20 +38,31 @@ Planet::Planet(const std::string &name, float radius, float orbitRadius, double 
     _orbitRadius = SCALE_ORBITRADIUS*orbitRadius;
     _translationPeriod = SCALE_TRANSLATION*translationPeriod;
     _rotationPeriod = SCALE_ROTATION*rotationPeriod;
+    _hasMoon = false;
 
     srand(clock());
     _pos.set(rand()%100, rand()%100, 0.0);
 }
 
-void Planet::iterate() {
+void Planet::iterate(const Position &center) {
+    // Calc center variatin
+    Position dcenter(center.x()-_lastCenter.x(), center.y()-_lastCenter.y(), 0.0);
+    _lastCenter = center;
+    _pos.set(_pos.x()+dcenter.x(), _pos.y()+dcenter.y(), 0.0);
+
     // Translation
-    double currAng = atan2(_pos.y(), _pos.x());
+    double currAng = atan2(_pos.y()-center.y(), _pos.x()-center.x());
     double angVel = (_translationPeriod==0? 0 : TWOPI/_translationPeriod);
     double newAng = currAng + angVel;
-    _pos.set(_orbitRadius*cos(newAng), _orbitRadius*sin(newAng), 0);
+    _pos.set(center.x()+_orbitRadius*cos(newAng), center.y()+_orbitRadius*sin(newAng), 0);
 
     // Rotation
     _rotation += (_rotationPeriod==0? 0 : TWOPI/_rotationPeriod);
+
+    // Moon
+    if(_hasMoon) {
+        _moon->iterate(_pos);
+    }
 }
 
 void Planet::draw() {
@@ -67,4 +78,13 @@ void Planet::draw() {
 
     // Draw planet
     Object::drawSphere(_pos, _rotation, _radius);
+
+    // Moon
+    if(_hasMoon)
+        _moon->draw();
+}
+
+void Planet::setMoon(float radius, float orbitRadius, double translationPeriod, double rotationPeriod, const char *imgname) {
+    _hasMoon = true;
+    _moon = new Planet(name()+" - Moon", radius, orbitRadius, translationPeriod, rotationPeriod, imgname);
 }

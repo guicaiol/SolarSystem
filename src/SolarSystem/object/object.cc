@@ -80,6 +80,14 @@ void Object::drawSphere(const Position &pos, float rotation, int radius) {
     // Draw sphere
     gluSphere(_quad, radius, MESH_SIZE, MESH_SIZE);
 
+    // Saturn rings
+    if(_name=="Saturn") {
+        glRotatef(-rotation*180/3.14, 0.0f, 0.0f, 1.0f);
+        glRotatef(10, 0.0f, 1.0f, 0.0f);
+        glutSolidTorus(0.05*radius, 1.45*radius, 2, MESH_SIZE);
+        glutSolidTorus(0.15*radius, 1.75*radius, 2, MESH_SIZE);
+    }
+
     glDisable(GL_TEXTURE_2D);
     if(_name=="Sun")
         glDisable(GL_LIGHT1);

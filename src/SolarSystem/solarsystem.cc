@@ -91,9 +91,14 @@ void SolarSystem::initialize() {
     _objects.push_back(new Planet("Sun", 160, 0, 0, 24.47, "../textures/sun.bmp"));
 
     // Create planets
+
     _objects.push_back(new Planet("Mercury", 35.634, 250,     88,   58.6, "../textures/mercury.bmp"));
     _objects.push_back(new Planet("Venus",   46.000, 400,    224,    243, "../textures/venus.bmp"));
-    _objects.push_back(new Planet("Earth",   56.268, 650,    365, 0.9958, "../textures/earth.bmp"));
+
+    Planet *earth = NULL;
+    _objects.push_back(earth = new Planet("Earth",   56.268, 650,    365, 0.9958, "../textures/earth.bmp"));
+    earth->setMoon(19.340, 70, 27.322, 3.232, "../textures/moon.bmp");
+
     _objects.push_back(new Planet("Mars",    30.361, 950,    687, 1.0208, "../textures/mars.bmp"));
     _objects.push_back(new Planet("Jupiter", 162.4,  1300,  4307,  0.396, "../textures/jupiter.bmp"));
     _objects.push_back(new Planet("Saturn",  131.8,  1727, 10731,  0.416, "../textures/saturn.bmp"));
@@ -112,7 +117,7 @@ void SolarSystem::drawEvent() {
     // Planets
     for(unsigned i=0; i<_objects.size(); i++) {
         Planet *planet = _objects.at(i);
-        planet->iterate();
+        planet->iterate(Position());
         planet->draw();
     }
 

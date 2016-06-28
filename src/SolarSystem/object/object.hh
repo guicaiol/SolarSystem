@@ -44,7 +44,7 @@ public:
     float rotation() const { return _rotation; }
 
     // Virtual pure methods
-    virtual void iterate() = 0;
+    virtual void iterate(const Position &center) = 0;
     virtual void draw() = 0;
 
 protected:
