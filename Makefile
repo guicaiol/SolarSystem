@@ -15,7 +15,7 @@ OBJECTS = \
 	$(OBJ)/imageloader.o \
 	$(OBJ)/main.o
 	
-all: $(TARGET)
+all: dirs $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(LFLAGS) $(OBJECTS) -o $(TARGET)
@@ -40,6 +40,10 @@ $(OBJ)/imageloader.o:
 	
 $(OBJ)/main.o:
 	$(CC) $(CFLAGS) -c $(SRC)/main.cc -o $@
+
+dirs:
+	mkdir -p obj/
+	mkdir -p bin/
 
 clean:
 	rm -f $(OBJ)/* $(TARGET)
